@@ -1,0 +1,17 @@
+/* FORM FIXES */
+.wait-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* TIMER BADGE */
+.timer-badge {
+    display: inline-block;
+    background: #eef2ff;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #3740b8;
+}
