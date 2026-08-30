@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Promociones vigentes</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/hostess.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/promociones_vigentes.css') }}">
+</head>
+
+<body>
+
+    <div class="page-header">
+        <div>
+            <h2>Promociones vigentes</h2>
+            <p>Promociones activas del turno</p>
+        </div>
+
+        <div class="header-actions">
+            <button id="btnRegresar" class="btn-primary">← Regresar al menú</button>
+        </div>
+    </div>
+
+    <div class="promo-grid" id="promoGrid"></div>
+
+    <script src="{{ url_for('static', filename='JS/promociones_vigentes.js') }}"></script>
+</body>
+
+</html>

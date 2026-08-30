@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de usuarios – Noreste Grill</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='CSS/hostess.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/usuarios.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body class="app">
+
+    <div class="main">
+
+        <!-- top part  -->
+        <div class="users-header-bar">
+            <div class="users-header-left">
+                <button onclick="volverMenu()" class="btn-primary back-btn">
+                    ← Regresar al menú
+                </button>
+            </div>
+
+            <div class="users-header-center">
+                <h1 class="users-main-title">Gestión de usuarios</h1>
+            </div>
+
+            <div class="users-header-right"></div>
+        </div>
+
+        <div class="content">
+
+            <!-- filters to check by role or status and to look up by name as well -->
+            <div class="users-actions-bar">
+
+                <div class="users-filters">
+                    <div class="filter-box search-box">
+                        <span class="filter-icon">🔎</span>
+                        <input
+                            type="search"
+                            id="searchUsuarios"
+                            name="usuarios_search_no_autofill"
+                            placeholder="Buscar usuario..."
+                            autocomplete="new-password"
+                            autocorrect="off"
+                            spellcheck="false"
+                            readonly
+                        >
+                    </div>
+
+                    <div class="filter-box">
+                        <span class="filter-icon">👤</span>
+                        <select id="filterRol">
+                            <option value="" disabled selected hidden>Rol</option>
+                            <option value="GERENTE">Gerente</option>
+                            <option value="JEFEPISO">Jefe de Piso</option>
+                            <option value="HOSTESS">Hostess</option>
+                            <option value="MESERO">Mesero</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-box">
+                        <span class="filter-icon">🏷</span>
+                        <select id="filterEstado">
+                            <option value="" disabled selected hidden>Estado</option>
+                            <option value="ACTIVO">Activo</option>
+                            <option value="INACTIVO">Inactivo</option>
+                            <option value="PENDIENTE">Pendiente</option>
+                            <option value="SUSPENDIDO">Suspendido</option>
+                        </select>
+                    </div>
+
+                    <button id="btnLimpiarFiltros" class="small-top-btn">
+                        Limpiar filtros
+                    </button>
+                </div>
+
+                <div class="users-top-actions">
+                    <button id="btnActivarSeleccionados" class="small-icon-btn" title="Activar seleccionados">✓</button>
+                    <button id="btnDesactivarSeleccionados" class="small-icon-btn danger-icon" title="Desactivar seleccionados">✕</button>
+                    <button id="btnEliminarSeleccionados" class="small-icon-btn delete-icon" title="Eliminar seleccionados">🗑</button>
+                    <button id="btnNuevoUsuario" class="btn-primary">+ Registrar usuario</button>
+                </div>
+            </div>
+
+            <!-- TABLE -->
+            <div class="users-table-wrapper">
+                <table class="users-table" id="tablaUsuarios">
+                    <thead>
+                        <tr>
+                            <th style="width:40px;">
+                                <input type="checkbox" id="checkAll">
+                            </th>
+                            <th>Usuario</th>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Último acceso</th>
+                            <th style="width:120px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal" id="modalUsuario">
+        <div class="modal-content users-modal">
+
+            <div class="modal-header">
+                <h3 id="tituloModal">Editar usuario</h3>
+                <button class="modal-close-btn" id="btnCerrarModal">✕</button>
+            </div>
+
+            <div class="modal-form-grid">
+                <div class="modal-group">
+                    <label>Usuario</label>
+                    <input id="inUser" class="modal-input">
+                </div>
+
+                <div class="modal-group">
+                    <label>Nombre</label>
+                    <input id="inNombre" class="modal-input">
+                </div>
+
+                <div class="modal-group full">
+                    <label>Correo</label>
+                    <input id="inCorreo" class="modal-input">
+                </div>
+
+                <div class="modal-group">
+                    <label>Rol</label>
+                    <select id="inRol" class="modal-select">
+                        <option value="GERENTE">Gerente</option>
+                        <option value="JEFEPISO">Jefe de Piso</option>
+                        <option value="HOSTESS">Hostess</option>
+                        <option value="MESERO">Mesero</option>
+                    </select>
+                </div>
+
+                <div class="modal-group">
+                    <label>Estado</label>
+                    <select id="inEstado" class="modal-select">
+                        <option value="ACTIVO">Activo</option>
+                        <option value="INACTIVO">Inactivo</option>
+                        <option value="PENDIENTE">Pendiente</option>
+                        <option value="SUSPENDIDO">Suspendido</option>
+                    </select>
+                </div>
+
+                <div class="modal-group full">
+                    <label>Contraseña</label>
+                    <input id="inContrasena" type="password" class="modal-input">
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-secondary" id="btnCancelar">Cancelar</button>
+                <button class="btn-primary" id="btnGuardar">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+   <script src="{{ url_for('static', filename='JS/usuarios.js', v=2) }}"></script>
+</body>
+
+</html>

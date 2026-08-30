@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Rendimiento del mesero</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/hostess.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/mesero.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <div id="msgPDF" class="pdf-msg">
+        ✔ Reporte generado correctamente
+    </div>
+
+    <div class="header-return">
+        <div class="header-actions">
+            <button onclick="volverMenuMesero()" class="btn-primary">
+                ← Volver
+            </button>
+
+            <button onclick="exportarPDF()" class="btn-primary">
+                📄 Exportar PDF
+            </button>
+        </div>
+
+        <h2>Rendimiento del mesero</h2>
+
+        <div class="header-spacer"></div>
+    </div>
+
+    <p id="meseroName" class="subtitle"></p>
+
+    <div class="kpi-container">
+
+        <div class="kpi-card">
+            <h1 id="kpiCalificacion">--</h1>
+            <p>Calificación</p>
+        </div>
+
+        <div class="kpi-card">
+            <h1 id="kpiRank">#--</h1>
+            <p>Ranking</p>
+        </div>
+
+        <div class="kpi-card">
+            <h1 id="kpiPromosTotal">--</h1>
+            <p>Promos aplicadas</p>
+        </div>
+
+        <div class="kpi-card">
+            <h1 id="kpiHorario">--</h1>
+            <p>Horario asignado</p>
+        </div>
+
+    </div>
+
+    <div class="rendimiento-grid">
+
+        <div class="panel panel-compact">
+            <h3 class="panel-title">Resumen de rendimiento</h3>
+
+            <table class="table table-compact">
+                <thead>
+                    <tr>
+                        <th>Indicador</th>
+                        <th>Valor</th>
+                        <th>Detalles</th>
+                    </tr>
+                </thead>
+
+                <tbody id="kpiTable"></tbody>
+            </table>
+        </div>
+
+        <div class="panel panel-compact">
+            <h3 class="panel-title">Promociones aplicadas hoy</h3>
+
+            <table class="table table-compact">
+                <thead>
+                    <tr>
+                        <th>Promoción</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+
+                <tbody id="promoDetalleTable"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="chart-row single-chart">
+        <div class="chart-card chart-card-small">
+            <h3>Promociones aplicadas por tipo</h3>
+            <canvas id="kpiBarChart"></canvas>
+        </div>
+    </div>
+
+    <div class="modal" id="modalDetalleKPI">
+        <div class="modal-content modal-content-readable">
+            <div class="modal-header">
+                <h3 id="detalleTitulo">Detalle</h3>
+                <button class="modal-close-btn" onclick="cerrarDetalleKPI()">✕</button>
+            </div>
+
+            <div id="detalleContenido" class="detalle-grid"></div>
+
+            <div class="modal-actions">
+                <button class="btn-primary" onclick="cerrarDetalleKPI()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='JS/mi_rendimiento.js') }}"></script>
+</body>
+
+</html>

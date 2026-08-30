@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Noreste Grill – Hostess</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/hostess.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <div class="app">
+
+        <aside class="sidebar">
+            <div class="sidebar__logo">
+                <span class="logo-icon"></span>
+                <span class="logo-text">Noreste Grill</span>
+            </div>
+
+            <nav class="sidebar__nav">
+                <a href="/reservaciones" class="nav-item">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-label">Reservaciones</span>
+                </a>
+
+                <a href="/lista_espera" class="nav-item">
+                    <span class="nav-icon">🕒</span>
+                    <span class="nav-label">Lista de espera</span>
+                </a>
+
+                <a href="/estado_mesas" class="nav-item">
+                    <span class="nav-icon">🪑</span>
+                    <span class="nav-label">Estado de mesas</span>
+                </a>
+
+                <a href="/promociones_vigentes" class="nav-item">
+                    <span class="nav-icon">⭐</span>
+                    <span class="nav-label">Promociones vigentes</span>
+                </a>
+            </nav>
+
+            <div class="sidebar__footer">
+                <button id="btnLogout" class="btn-ghost">🔐 Cerrar sesión</button>
+            </div>
+        </aside>
+
+        <div class="main">
+
+            <header class="topbar">
+                <div class="topbar__left">
+                    <h1 class="topbar__title">Panel del Hostess</h1>
+                </div>
+
+                <div class="topbar__right">
+                    <div class="user-chip">
+                        <div class="user-avatar">H</div>
+                        <div class="user-info">
+                            <span class="user-name" id="dashboardUserName">Usuario</span>
+                            <span class="user-role">Recepción</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="content">
+
+                <section class="cards-grid">
+
+                    <article class="card">
+                        <div class="card-header">
+                            <span class="card-title">Clientes en espera</span>
+                            <span class="card-tag">🕒</span>
+                        </div>
+                        <div class="card-main">
+                            <span class="card-number" id="cardClientesEspera">0</span>
+                            <span class="card-caption">En lista de espera</span>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="card-header">
+                            <span class="card-title">Mesas ocupadas</span>
+                            <span class="card-tag">🍽</span>
+                        </div>
+                        <div class="card-main card-main--split">
+                            <div>
+                                <span class="card-number" id="cardMesasOcupadas">0</span>
+                                <span class="card-caption">En servicio</span>
+                            </div>
+                            <div>
+                                <span class="card-number card-number--muted" id="cardMesasLibres">0</span>
+                                <span class="card-caption">Disponibles</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="card-header">
+                            <span class="card-title">Tiempo promedio</span>
+                            <span class="card-tag">⏳</span>
+                        </div>
+                        <div class="card-main">
+                            <span class="card-number" id="cardPromedioServicio">0 min</span>
+                            <span class="card-caption">Promedio de mesas ocupadas</span>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="card-header">
+                            <span class="card-title">Promociones vigentes</span>
+                            <span class="card-tag">⭐</span>
+                        </div>
+                        <div class="card-main">
+                            <span class="card-number" id="cardPromocionesVigentes">0</span>
+                            <span class="card-caption">Disponibles actualmente</span>
+                        </div>
+                    </article>
+
+                </section>
+
+                <section class="content-grid">
+
+                    <section class="panel panel--large">
+                        <header class="panel-header">
+                            <div>
+                                <h2 class="panel-title">Reservaciones recientes</h2>
+                                <p class="panel-subtitle">Últimas reservaciones registradas.</p>
+                            </div>
+                            <a href="/reservaciones" class="btn-primary">Ver reservaciones</a>
+                        </header>
+
+                        <div class="panel-body panel-body--list" id="listaReservacionesRecientes"></div>
+                    </section>
+
+                    <section class="panel">
+                        <header class="panel-header">
+                            <h2 class="panel-title">Lista de espera</h2>
+                            <p class="panel-subtitle">Resumen de clientes en espera</p>
+                        </header>
+
+                        <div class="panel-body panel-body--list" id="listaEsperaResumen"></div>
+                    </section>
+
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='JS/dashboard_hostess.js') }}"></script>
+
+    <script>
+        document.getElementById("btnLogout").addEventListener("click", () => {
+            localStorage.removeItem("ROL");
+            localStorage.removeItem("USER");
+            localStorage.removeItem("NO_EMPLEADO");
+            window.location.href = "/";
+        });
+
+        const dashboardUserName = document.getElementById("dashboardUserName");
+const user = localStorage.getItem("USER");
+
+if (dashboardUserName) {
+    dashboardUserName.textContent = user || "Usuario";
+}
+    </script>
+</body>
+
+</html>
