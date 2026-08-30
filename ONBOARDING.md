@@ -52,6 +52,53 @@ requirements.txt
 .env.example
 ```
 
+### Explicacion de carpetas
+
+| Carpeta o archivo | Que contiene | Para que sirve |
+| --- | --- | --- |
+| `backend/` | Archivos `.py` del servidor | Contiene la logica principal de Flask, las rutas, APIs y conexion a la base de datos |
+| `backend/test_app.py` | Aplicacion principal de Flask | Crea `app`, registra los blueprints y define la ruta inicial `/` |
+| `backend/db.py` | Configuracion de conexion a MySQL | Centraliza la conexion para que los demas modulos puedan consultar la base de datos |
+| `backend/auth.py` | Login | Valida usuario, contrasena, estado y rol |
+| `backend/usuarios.py` | Modulo de usuarios | Maneja altas, consultas, cambios, eliminacion y restricciones por rol |
+| `backend/reservaciones.py` | Modulo de reservaciones | Maneja las reservaciones de clientes |
+| `backend/lista_espera.py` | Modulo de lista de espera | Controla clientes en espera antes de asignarlos a una mesa |
+| `backend/mesas.py` | Modulo de mesas | Controla estado de mesas, asignacion de meseros, tiempos y retrasos |
+| `backend/promociones.py` | Modulo de promociones | Administra promociones y consulta promociones vigentes |
+| `backend/meseros.py` | Modulo de gestion de meseros | Maneja rendimiento, turnos, observaciones, ranking y promociones aplicadas |
+| `backend/dashboard_*.py` | Dashboards por rol | Entrega datos resumidos para gerente, hostess, jefe de piso y mesero |
+| `templates/` | Archivos `.html` | Contiene las pantallas que Flask renderiza con `render_template()` |
+| `static/CSS/` | Archivos de estilos | Define el diseno visual de login, dashboards y modulos |
+| `static/JS/` | Archivos JavaScript | Hace peticiones `fetch()` a las APIs y controla la interaccion de las vistas |
+| `static/IMAGES/` | Imagenes del sistema | Guarda recursos visuales como el logo |
+| `database/` | Scripts SQL | Contiene `schema.sql` para crear la base de datos y tablas |
+| `requirements.txt` | Lista de dependencias | Permite instalar las librerias necesarias con `pip install -r requirements.txt` |
+| `.env.example` | Ejemplo de variables de entorno | Muestra que datos se necesitan para conectar a MySQL sin subir credenciales reales |
+
+### Como se conecta todo
+
+Flask usa una estructura comun donde:
+
+```text
+backend/     -> logica del servidor
+templates/   -> HTML que Flask muestra al usuario
+static/      -> CSS, JavaScript e imagenes usadas por el HTML
+database/    -> script para preparar MySQL
+```
+
+Cuando el usuario entra a una ruta como `/usuarios`, Flask ejecuta una funcion del backend y devuelve un archivo HTML desde `templates/`. Despues, ese HTML carga sus estilos desde `static/CSS` y su JavaScript desde `static/JS`.
+
+El JavaScript se comunica con el backend usando rutas API, por ejemplo:
+
+```text
+/api/login
+/api/usuarios
+/api/mesas
+/api/promociones
+```
+
+El backend recibe esas peticiones, usa `backend/db.py` para conectarse a MySQL y consulta o modifica las tablas correspondientes.
+
 El archivo principal de Flask es:
 
 ```text
