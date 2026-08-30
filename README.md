@@ -32,3 +32,7 @@ The app starts at `http://127.0.0.1:5000`.
 ## Versions
 
 See [VERSIONES.md](VERSIONES.md) for the tools, versions, installation steps, and the reason those versions were used.
+
+## Onboarding
+
+See [ONBOARDING.md](ONBOARDING.md) for the local setup guide, project structure, roles, database notes, and main modules.
