@@ -43,6 +43,9 @@ static/
   JS/
   IMAGES/
 
+database/
+  schema.sql
+
 README.md
 VERSIONES.md
 requirements.txt
@@ -146,7 +149,22 @@ Nota: no se deben subir credenciales reales a GitHub. El archivo `.env.example` 
 
 ## Estructura esperada de la base de datos
 
-El proyecto no incluye todavia un archivo `.sql` con la creacion completa de tablas. Para correrlo localmente, la base de datos debe existir y tener las tablas que usa el backend.
+El proyecto incluye el script `database/schema.sql` con la creacion de la base de datos `noreste_grill` y sus tablas principales. Para correrlo localmente, primero se debe ejecutar ese script en MySQL.
+
+Ejemplo desde MySQL Workbench:
+
+1. Abrir MySQL Workbench.
+2. Conectarse al servidor local.
+3. Abrir el archivo `database/schema.sql`.
+4. Ejecutar el script completo.
+
+Ejemplo desde terminal si el comando `mysql` esta disponible:
+
+```powershell
+mysql -u root -p < database/schema.sql
+```
+
+Nota: el script crea la estructura de tablas, pero no agrega automaticamente usuarios, roles, mesas o promociones iniciales.
 
 Tablas principales:
 
@@ -465,7 +483,6 @@ http://127.0.0.1:5000
 
 ## Recomendaciones para continuar el proyecto
 
-- Agregar un archivo `schema.sql` con la estructura completa de la base de datos.
 - Agregar datos iniciales para roles y un usuario administrador de prueba.
 - Cambiar el manejo de contrasenas para usar hashing en lugar de texto plano.
 - Agregar validaciones de sesion desde backend, no solo desde `localStorage`.
