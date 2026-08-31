@@ -160,6 +160,12 @@ https://dev.mysql.com/downloads/installer/
 
 Tambien se recomienda instalar MySQL Workbench para administrar la base de datos de forma visual.
 
+```text
+https://dev.mysql.com/downloads/workbench/
+```
+
+IMPORTANTE: MySQL Workbench por si solo no inicia MySQL Server, para esto instala la configuración correspondiente desde el primer link (installer)
+
 ## Base de datos
 
 El proyecto espera una base de datos llamada:
