@@ -49,6 +49,7 @@ CREATE TABLE Reservacion (
     no_personas INT NOT NULL,
     estado VARCHAR(20) NOT NULL,
     comentarios VARCHAR(255) NULL,
+    fecha_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_reservacion PRIMARY KEY (id_reservacion),
     CONSTRAINT fk_reservacion_usuarios
         FOREIGN KEY (no_empleado) REFERENCES Usuarios(no_empleado)
