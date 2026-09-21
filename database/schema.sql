@@ -92,6 +92,8 @@ CREATE TABLE Gestion_de_meseros (
     turno VARCHAR(30) NULL,
     observacion VARCHAR(255) NULL,
     calificacion DOUBLE DEFAULT 0,
+    razon_retraso VARCHAR(100) NULL,
+    comentario_retraso VARCHAR(255) NULL,
     fecha_registro DATE NOT NULL DEFAULT (CURRENT_DATE),
     CONSTRAINT pk_meseros PRIMARY KEY (id_gestion),
     CONSTRAINT fk_gestion_usuarios

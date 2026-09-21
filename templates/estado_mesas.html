@@ -243,6 +243,42 @@
                 </div>
             </section>
 
+            <!-- PANEL DE REPORTES: promedio de atención y motivo de retraso más frecuente -->
+            <section class="panel" id="reportesPanel" style="display:none;">
+                <header class="panel-header">
+                    <h2 class="panel-title">Reportes de mesas y retrasos</h2>
+                    <p class="panel-subtitle">
+                        Consulta el resumen operativo antes de descargar el reporte en PDF.
+                    </p>
+                </header>
+
+                <div class="panel-body panel-body--list">
+                    <div class="list-item">
+                        <label class="form-label"><strong>Desde</strong></label>
+                        <input id="reporteFechaInicio" class="form-input" type="date">
+                    </div>
+
+                    <div class="list-item">
+                        <label class="form-label"><strong>Hasta</strong></label>
+                        <input id="reporteFechaFin" class="form-input" type="date">
+                    </div>
+
+                    <button class="btn-primary btn-dark" id="btnVerResumen">
+                        Ver resumen
+                    </button>
+
+                    <div class="list-item" id="reporteResumen" style="display:none;">
+                        <p><strong>Promedio de atención:</strong> <span id="reportePromedio">--</span> min</p>
+                        <p><strong>Mesas atendidas:</strong> <span id="reporteMesasAtendidas">--</span></p>
+                        <p><strong>Motivo de retraso más común:</strong> <span id="reporteMotivo">--</span></p>
+                    </div>
+
+                    <button class="btn-primary" id="btnDescargarPdf" style="display:none;">
+                        Descargar reporte PDF
+                    </button>
+                </div>
+            </section>
+
         </div>
     </div>
 

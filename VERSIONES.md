@@ -11,6 +11,8 @@ Este documento describe las versiones principales usadas en el proyecto, como in
 | MySQL | Version local instalada en el equipo | Base de datos del sistema |
 | mysql-connector-python | 9.6.0 | Conexion entre Python y MySQL |
 | Waitress | 3.0.2 | Servidor WSGI para correr Flask en modo mas cercano a produccion |
+| ReportLab | 4.2.5 | Generacion del reporte PDF de mesas y retrasos |
+| Docker / Docker Compose | Ultima version estable | Contenedores para Flask y MySQL en desarrollo |
 
 ## Python 3.14.5
 
@@ -145,6 +147,28 @@ pip install waitress==3.0.2
 ### Por que se uso esta version
 
 Se mantuvo Waitress 3.0.2 porque ya estaba instalado en el entorno del proyecto. Sirve como opcion para ejecutar Flask sin depender del servidor de desarrollo integrado.
+
+## ReportLab 4.2.5
+
+ReportLab se usa para construir el reporte de mesas y retrasos en formato PDF (`backend/services/mesas_service.py`, funcion `generar_reporte_pdf`), a partir del resumen (promedio de atencion, mesas atendidas, motivo de retraso mas comun) y el detalle de mesas atendidas guardado en `Gestion_de_meseros`.
+
+### Como instalarlo
+
+Se instala junto con las demas dependencias:
+
+```powershell
+pip install -r requirements.txt
+```
+
+## Docker y Docker Compose
+
+El proyecto incluye `Dockerfile` y `docker-compose.yml` para levantar el backend Flask junto con MySQL sin instalar nada localmente salvo Docker Desktop.
+
+```powershell
+docker compose up --build
+```
+
+`docker-compose.yml` monta `database/schema.sql` como script de inicializacion de MySQL, por lo que la base y las tablas se crean automaticamente la primera vez que se levanta el contenedor de base de datos.
 
 ## Instalacion completa del proyecto
 

@@ -1,0 +1,28 @@
+# Entornos virtuales y cachés locales: no deben viajar a la imagen.
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Configuración local (credenciales de MySQL, etc).
+.env
+
+# Control de versiones y editores.
+.git/
+.gitignore
+.idea/
+.vscode/
+
+# Pruebas, linting, logs.
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# Documentación (no es necesaria dentro de la imagen).
+*.md
+
+# Archivos de Docker (no hace falta copiarlos dentro de sí mismos).
+Dockerfile
+docker-compose.yml

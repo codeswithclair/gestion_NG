@@ -1,0 +1,48 @@
+# Levanta el stack completo de Noreste Grill: MySQL + backend Flask.
+#
+# Uso:
+#   1. Copiar .env.example a .env y ajustar credenciales si se desea.
+#   2. docker compose up --build
+#   3. Abrir http://127.0.0.1:5000
+#
+# database/schema.sql se monta como script de inicialización de MySQL: solo
+# se ejecuta la primera vez que se crea el volumen "mysql_data" (si ya existe
+# un volumen previo, hay que borrarlo con "docker compose down -v" para que
+# el schema se vuelva a cargar).
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: gestion_ng_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_NAME:-noreste_grill}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASSWORD:-root}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    container_name: gestion_ng_web
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_USER: ${DB_USER:-root}
+      DB_PASSWORD: ${DB_PASSWORD:-root}
+      DB_NAME: ${DB_NAME:-noreste_grill}
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
