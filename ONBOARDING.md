@@ -23,17 +23,11 @@ backend/
   __init__.py
   test_app.py
   db.py
-  auth.py
-  usuarios.py
-  reservaciones.py
-  lista_espera.py
-  mesas.py
-  promociones.py
-  meseros.py
-  dashboard_gerente.py
-  dashboard_hostess.py
-  dashboard_jefepiso.py
-  dashboard_mesero.py
+  errors.py
+  openapi_spec.py
+  controllers/      -> rutas Flask (Blueprints): reciben el request y devuelven la respuesta
+  services/         -> logica de negocio, validaciones y permisos por rol
+  repositories/      -> Data Access Layer: unicas funciones que ejecutan SQL
 
 templates/
   Archivos HTML de las vistas
@@ -57,16 +51,13 @@ requirements.txt
 | Carpeta o archivo | Que contiene | Para que sirve |
 | --- | --- | --- |
 | `backend/` | Archivos `.py` del servidor | Contiene la logica principal de Flask, las rutas, APIs y conexion a la base de datos |
-| `backend/test_app.py` | Aplicacion principal de Flask | Crea `app`, registra los blueprints y define la ruta inicial `/` |
-| `backend/db.py` | Configuracion de conexion a MySQL | Centraliza la conexion para que los demas modulos puedan consultar la base de datos |
-| `backend/auth.py` | Login | Valida usuario, contrasena, estado y rol |
-| `backend/usuarios.py` | Modulo de usuarios | Maneja altas, consultas, cambios, eliminacion y restricciones por rol |
-| `backend/reservaciones.py` | Modulo de reservaciones | Maneja las reservaciones de clientes |
-| `backend/lista_espera.py` | Modulo de lista de espera | Controla clientes en espera antes de asignarlos a una mesa |
-| `backend/mesas.py` | Modulo de mesas | Controla estado de mesas, asignacion de meseros, tiempos y retrasos |
-| `backend/promociones.py` | Modulo de promociones | Administra promociones y consulta promociones vigentes |
-| `backend/meseros.py` | Modulo de gestion de meseros | Maneja rendimiento, turnos, observaciones, ranking y promociones aplicadas |
-| `backend/dashboard_*.py` | Dashboards por rol | Entrega datos resumidos para gerente, hostess, jefe de piso y mesero |
+| `backend/test_app.py` | Aplicacion principal de Flask | Crea `app`, registra los blueprints (controllers) y define la ruta inicial `/` |
+| `backend/db.py` | Configuracion de conexion a MySQL | Centraliza la conexion para que los repositories puedan consultar la base de datos |
+| `backend/errors.py` | `ServiceError` | Excepcion de negocio que un errorhandler central convierte en `{"ok": false, "message": ...}` |
+| `backend/openapi_spec.py` | Generador de OpenAPI | Construye el spec que consume Swagger UI en `/docs` a partir de las rutas registradas |
+| `backend/controllers/*.py` | Capa Controller | Un Blueprint por modulo (auth, usuarios, reservaciones, etc). Recibe el request, llama al service y arma el `jsonify()` |
+| `backend/services/*.py` | Capa Service | Reglas de negocio: validaciones, permisos por rol, formateo de fechas/horas. No ejecuta SQL directamente |
+| `backend/repositories/*.py` | Data Access Layer | Unico lugar donde se ejecutan queries SQL contra MySQL |
 | `templates/` | Archivos `.html` | Contiene las pantallas que Flask renderiza con `render_template()` |
 | `static/CSS/` | Archivos de estilos | Define el diseno visual de login, dashboards y modulos |
 | `static/JS/` | Archivos JavaScript | Hace peticiones `fetch()` a las APIs y controla la interaccion de las vistas |
@@ -355,18 +346,15 @@ Puede revisar sus mesas asignadas, ver promociones vigentes y consultar su rendi
 
 ## Modulos principales del backend
 
-| Archivo | Funcion |
-| --- | --- |
-| `backend/test_app.py` | Crea la app Flask y registra los blueprints |
-| `backend/db.py` | Centraliza la conexion a MySQL |
-| `backend/auth.py` | Login y validacion de usuario |
-| `backend/usuarios.py` | CRUD de usuarios y restricciones por rol |
-| `backend/reservaciones.py` | CRUD de reservaciones |
-| `backend/lista_espera.py` | Manejo de clientes en espera |
-| `backend/mesas.py` | Estado de mesas, asignacion de meseros y registro de tiempos |
-| `backend/promociones.py` | CRUD de promociones y promociones vigentes |
-| `backend/meseros.py` | Rendimiento, ranking, turnos, observaciones y promociones aplicadas |
-| `backend/dashboard_*.py` | Datos resumidos para cada dashboard |
+Cada modulo (auth, usuarios, reservaciones, lista_espera, mesas, promociones, meseros y los 4 dashboards) esta dividido en tres archivos, uno por capa:
+
+| Capa | Archivo tipico | Responsabilidad |
+| --- | --- | --- |
+| Controller | `backend/controllers/<modulo>_controller.py` | Define las rutas del Blueprint, lee `request`, llama al service y devuelve `jsonify()` |
+| Service | `backend/services/<modulo>_service.py` | Valida datos, aplica reglas de negocio (permisos por rol, formatos) y orquesta el repository |
+| Repository | `backend/repositories/<modulo>_repository.py` | Ejecuta las queries SQL contra MySQL y regresa filas/valores simples |
+
+`backend/test_app.py` crea la app Flask, registra los controllers como blueprints y registra el errorhandler de `ServiceError`. `backend/db.py` centraliza la conexion a MySQL.
 
 ## Promociones
 
