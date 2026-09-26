@@ -61,11 +61,11 @@ def ocupar(id_mesa, nombre_cliente, no_personas, no_empleado, razon_retraso, com
     with get_cursor() as (conn, cursor):
         cursor.execute("""
             UPDATE Mesa
-            SET estado = 'ocupada',
+            SET hora_inicio = IF(estado <> 'ocupada' OR hora_inicio IS NULL, NOW(), hora_inicio),
+                estado = 'ocupada',
                 nombre_cliente = %s,
                 no_personas = %s,
                 no_empleado = %s,
-                hora_inicio = IF(hora_inicio IS NULL, NOW(), hora_inicio),
                 razon_retraso = %s,
                 comentario_retraso = %s
             WHERE id_mesa = %s
@@ -77,7 +77,11 @@ def poner_en_limpieza(id_mesa, razon_retraso, comentario_retraso):
     with get_cursor() as (conn, cursor):
         cursor.execute("""
             UPDATE Mesa
-            SET estado = 'limpieza',
+            SET hora_inicio = IF(estado <> 'limpieza' OR hora_inicio IS NULL, NOW(), hora_inicio),
+                estado = 'limpieza',
+                nombre_cliente = NULL,
+                no_personas = NULL,
+                no_empleado = NULL,
                 razon_retraso = %s,
                 comentario_retraso = %s
             WHERE id_mesa = %s
