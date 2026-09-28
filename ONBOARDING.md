@@ -61,6 +61,65 @@ VERSIONES.md
 | `database/` | Scripts SQL | Contiene `schema.sql` para crear la base de datos y tablas |
 | `requirements.txt` | Lista de dependencias | Permite instalar las librerias necesarias con `pip install -r requirements.txt` |
 | `.env.example` | Ejemplo de variables de entorno | Muestra que datos se necesitan para conectar a MySQL sin subir credenciales reales |
+
+## Estructura de la base de datos
+
+El proyecto incluye el script `database/schema.sql` con la creacion de la base de datos `noreste_grill` y sus tablas principales. Para correrlo localmente, primero se debe ejecutar ese script en MySQL.
+
+Ejemplo desde MySQL Workbench:
+
+1. Abrir MySQL Workbench.
+2. Conectarse al servidor local.
+3. Abrir el archivo `database/schema.sql`.
+4. Ejecutar el script completo.
+
+Ejemplo desde terminal si el comando `mysql` esta disponible:
+
+```powershell
+mysql -u root -p < database/schema.sql
+```
+
+Nota: el script crea la estructura de tablas, pero no agrega automaticamente usuarios, roles, mesas o promociones iniciales.
+
+### Tablas principales
+
+| Tabla | Para que se usa |
+| --- | --- |
+| `Rol` | Guarda los roles disponibles del sistema |
+| `Usuarios` | Guarda usuarios, datos personales, contrasena, estado y rol |
+| `Reservacion` | Guarda reservaciones por cliente, fecha, hora y personas |
+| `Lista_Espera` | Guarda clientes en espera y su estado |
+| `Mesa` | Guarda estado de mesas, cliente asignado, mesero y tiempos |
+| `Promocion` | Guarda promociones, vigencia, condiciones y estado |
+| `Gestion_de_meseros` | Guarda rendimiento, mesas atendidas, turno, observaciones y calificacion |
+| `Promocion_has_Gestion_de_meseros` | Relaciona promociones aplicadas con la gestion del mesero |
+
+### Campos importantes por tabla
+
+| Tabla | Campos usados por el codigo |
+| --- | --- |
+| `Rol` | `id_rol`, `nombre` |
+| `Usuarios` | `no_empleado`, `id_rol`, `nombre`, `apellido`, `contrasena`, `correo`, `nombre_usuario`, `estado`, `ultimo_acceso` |
+| `Reservacion` | `id_reservacion`, `nombre_cliente`, `no_personas`, `fecha`, `hora`, `telefono`, `estado`, `comentarios` |
+| `Lista_Espera` | `id_lista`, `nombre_cliente`, `no_personas`, `telefono`, `estado`, `hora_registro` |
+| `Mesa` | `id_mesa`, `no_empleado`, `estado`, `nombre_cliente`, `no_personas`, `hora_inicio`, `razon_retraso`, `comentario_retraso` |
+| `Promocion` | `id_promocion`, `no_empleado`, `nombre`, `descripcion`, `condiciones`, `vigencia_inicio`, `vigencia_fin`, `estado`, `ocasion`, `dias_vigentes` |
+| `Gestion_de_meseros` | `id_gestion`, `no_empleado`, `id_mesa`, `promedio`, `ranking`, `turno`, `observacion`, `calificacion`, `fecha_registro` |
+| `Promocion_has_Gestion_de_meseros` | `id_promocion`, `id_gestion`, `cantidad`, `fecha_aplicacion` |
+
+### Credenciales de MySQL
+
+Las credenciales de MySQL dependen de la computadora donde se instale el proyecto. Normalmente se usa:
+
+```text
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=contrasena_local
+DB_NAME=noreste_grill
+```
+
+La contrasena real no debe quedar escrita en la documentacion ni en commits publicos.
+
 ## Setup recomendado con Docker
 
 Con Docker, cada integrante solo necesita Docker Desktop. No es necesario instalar MySQL localmente ni crear la base de datos a mano.
@@ -82,7 +141,7 @@ Copiar el archivo de ejemplo:
 Copy-Item .env.example .env
 ```
 
-El archivo `.env.example` contiene valores seguros de desarrollo. Cada persona puede ajustar su `.env` local, pero no debe commitearlo. Revisar siguiente sección de la estructura esperada en la base de datos.
+El archivo `.env.example` contiene valores seguros de desarrollo. Cada persona puede ajustar su `.env` local, pero no debe commitearlo.
 
 Variables usadas:
 
@@ -105,270 +164,7 @@ $env:DB_NAME="noreste_grill"
 
 Nota: no se deben subir credenciales reales a GitHub. El archivo `.env.example` solo sirve como referencia.
 
-#### Estructura esperada de la base de datos
-
-El proyecto incluye el script `database/schema.sql` con la creacion de la base de datos `noreste_grill` y sus tablas principales. Para correrlo localmente, primero se debe ejecutar ese script en MySQL.
-
-Ejemplo desde MySQL Workbench:
-
-1. Abrir MySQL Workbench.
-2. Conectarse al servidor local.
-3. Abrir el archivo `database/schema.sql`.
-4. Ejecutar el script completo.
-
-Ejemplo desde terminal si el comando `mysql` esta disponible:
-
-```powershell
-mysql -u root -p < database/schema.sql
-```
-
-Nota: el script crea la estructura de tablas, pero no agrega automaticamente usuarios, roles, mesas o promociones iniciales.
-
-Tablas principales:
-
-| Tabla | Para que se usa |
-| --- | --- |
-| `Rol` | Guarda los roles disponibles del sistema |
-| `Usuarios` | Guarda usuarios, datos personales, contrasena, estado y rol |
-| `Reservacion` | Guarda reservaciones por cliente, fecha, hora y personas |
-| `Lista_Espera` | Guarda clientes en espera y su estado |
-| `Mesa` | Guarda estado de mesas, cliente asignado, mesero y tiempos |
-| `Promocion` | Guarda promociones, vigencia, condiciones y estado |
-| `Gestion_de_meseros` | Guarda rendimiento, mesas atendidas, turno, observaciones y calificacion |
-| `Promocion_has_Gestion_de_meseros` | Relaciona promociones aplicadas con la gestion del mesero |
-
-Campos importantes por tabla:
-
-| Tabla | Campos usados por el codigo |
-| --- | --- |
-| `Rol` | `id_rol`, `nombre` |
-| `Usuarios` | `no_empleado`, `id_rol`, `nombre`, `apellido`, `contrasena`, `correo`, `nombre_usuario`, `estado`, `ultimo_acceso` |
-| `Reservacion` | `id_reservacion`, `nombre_cliente`, `no_personas`, `fecha`, `hora`, `telefono`, `estado`, `comentarios` |
-| `Lista_Espera` | `id_lista`, `nombre_cliente`, `no_personas`, `telefono`, `estado`, `hora_registro` |
-| `Mesa` | `id_mesa`, `no_empleado`, `estado`, `nombre_cliente`, `no_personas`, `hora_inicio`, `razon_retraso`, `comentario_retraso` |
-| `Promocion` | `id_promocion`, `no_empleado`, `nombre`, `descripcion`, `condiciones`, `vigencia_inicio`, `vigencia_fin`, `estado`, `ocasion`, `dias_vigentes` |
-| `Gestion_de_meseros` | `id_gestion`, `no_empleado`, `id_mesa`, `promedio`, `ranking`, `turno`, `observacion`, `calificacion`, `fecha_registro` |
-| `Promocion_has_Gestion_de_meseros` | `id_promocion`, `id_gestion`, `cantidad`, `fecha_aplicacion` |
-
-#### Credenciales
-
-##### Credenciales de MySQL
-
-Las credenciales de MySQL dependen de la computadora donde se instale el proyecto. Normalmente se usa:
-
-```text
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=contrasena_local
-DB_NAME=noreste_grill
-```
-
-La contrasena real no debe quedar escrita en la documentacion ni en commits publicos.
-
-#### Credenciales de usuarios del sistema
-
-El login de la aplicacion usa la tabla `Usuarios`. Para entrar al sistema debe existir al menos un usuario activo en esa tabla.
-
-El backend valida:
-
-```text
-nombre_usuario
-contrasena
-estado = ACTIVO
-rol asociado en la tabla Rol
-```
-
-Las contrasenas se comparan directamente contra el campo `contrasena` de la tabla `Usuarios`.
-
-#### Roles del sistema
-
-Los roles principales son:
-
-| Rol | Codigo usado | Funcion general |
-| --- | --- | --- |
-| Gerente | `GERENTE` / `G` | Administracion general del sistema |
-| Jefe de piso | `JEFEDEPISO` o `JEFEPISO` / `JP` | Supervision operativa |
-| Hostess | `HOSTESS` / `H` | Recepcion, lista de espera, reservaciones y mesas |
-| Mesero | `MESERO` / `M` | Consulta de mesas asignadas y promociones vigentes |
-
-Al iniciar sesion, el frontend guarda datos en `localStorage`:
-
-```text
-ROL
-USER
-NO_EMPLEADO
-```
-
-Con el valor de `ROL`, la aplicacion redirige al dashboard correspondiente.
-
-#### Funcionamiento de roles
-
-##### Gerente
-
-El gerente tiene acceso a funciones administrativas como:
-
-```text
-/gerente
-/usuarios
-/reservaciones
-/gestion_promociones
-/personal
-```
-
-Puede administrar usuarios y promociones, revisar reservaciones y consultar indicadores generales.
-
-##### Jefe de piso
-
-El jefe de piso tiene acceso a supervision operativa:
-
-```text
-/jefepiso
-/estado_mesas
-/personal
-/reservaciones
-/usuarios
-```
-
-En usuarios, el jefe de piso tiene restricciones. Puede trabajar principalmente con personal operativo, pero no debe modificar cuentas de gerente.
-
-##### Hostess
-
-La hostess trabaja con recepcion:
-
-```text
-/hostess
-/reservaciones
-/lista_espera
-/estado_mesas
-/promociones_vigentes
-```
-
-Su flujo principal es revisar reservaciones, manejar la lista de espera, asignar clientes a mesas y consultar promociones vigentes.
-
-##### Mesero
-
-El mesero tiene acceso a:
-
-```text
-/mesero
-/estado_mesas
-/promociones_vigentes
-/rendimiento_mesero
-```
-
-Puede revisar sus mesas asignadas, ver promociones vigentes y consultar su rendimiento.
-
-#### Modulos principales del backend
-
-Cada modulo (auth, usuarios, reservaciones, lista_espera, mesas, promociones, meseros y los 4 dashboards) esta dividido en tres archivos, uno por capa:
-
-| Capa | Archivo tipico | Responsabilidad |
-| --- | --- | --- |
-| Controller | `backend/controllers/<modulo>_controller.py` | Define las rutas del Blueprint, lee `request`, llama al service y devuelve `jsonify()` |
-| Service | `backend/services/<modulo>_service.py` | Valida datos, aplica reglas de negocio (permisos por rol, formatos) y orquesta el repository |
-| Repository | `backend/repositories/<modulo>_repository.py` | Ejecuta las queries SQL contra MySQL y regresa filas/valores simples |
-
-`backend/test_app.py` crea la app Flask, registra los controllers como blueprints y registra el errorhandler de `ServiceError`. `backend/db.py` centraliza la conexion a MySQL.
-
-##### Promociones
-
-Las promociones se guardan en la tabla `Promocion`.
-
-Cada promocion puede tener:
-
-```text
-nombre
-descripcion
-condiciones
-vigencia_inicio
-vigencia_fin
-estado
-ocasion
-dias_vigentes
-```
-
-El sistema distingue entre:
-
-| Vista/API | Funcion |
-| --- | --- |
-| `/gestion_promociones` | Administrar promociones |
-| `/promociones_vigentes` | Consultar promociones activas |
-| `/api/promociones` | Crear, consultar y editar promociones |
-| `/api/promociones-vigentes` | Consultar promociones activas dentro de su vigencia |
-
-Si una promocion ya fue aplicada por un mesero, el sistema puede desactivarla en lugar de eliminarla para no romper registros historicos.
-
-##### Gestion de meseros
-
-La gestion de meseros usa principalmente:
-
-```text
-Gestion_de_meseros
-Promocion_has_Gestion_de_meseros
-Mesa
-Usuarios
-```
-
-El sistema calcula o consulta:
-
-```text
-mesas atendidas
-mesas asignadas
-promedio de tiempo
-promociones aplicadas
-calificacion
-ranking
-turno
-observaciones
-```
-
-Cuando una mesa ocupada pasa a `libre`, el backend registra una entrada en `Gestion_de_meseros` para contar esa mesa como atendida y calcular el tiempo de servicio.
-
-##### Estado de mesas
-
-El modulo de mesas maneja estados como:
-
-```text
-libre
-ocupada
-limpieza
-```
-
-Tambien guarda:
-
-```text
-cliente asignado
-numero de personas
-mesero asignado
-hora de inicio
-razon de retraso
-comentario de retraso
-```
-
-El endpoint principal es:
-
-```text
-/api/mesas
-```
-
-##### Reservaciones y lista de espera
-
-Reservaciones:
-
-```text
-/reservaciones
-/api/reservaciones
-```
-
-Lista de espera:
-
-```text
-/lista_espera
-/api/lista-espera
-```
-
-Estos modulos permiten registrar, editar, eliminar y consultar clientes antes de asignarlos a una mesa.
-
+Ver [Estructura de la base de datos](#estructura-de-la-base-de-datos) para la creacion de tablas, los campos por tabla y las credenciales de MySQL.
 
 ### 3. Como correr el proyecto
 
@@ -469,6 +265,101 @@ Usar este camino solo si no se quiere usar Docker.
 | `/personal` | Gestion de meseros |
 | `/rendimiento_mesero` | Rendimiento individual del mesero |
 
+## Roles y permisos
+
+### Credenciales de usuarios del sistema
+
+El login de la aplicacion usa la tabla `Usuarios`. Para entrar al sistema debe existir al menos un usuario activo en esa tabla.
+
+El backend valida:
+
+```text
+nombre_usuario
+contrasena
+estado = ACTIVO
+rol asociado en la tabla Rol
+```
+
+Las contrasenas se comparan directamente contra el campo `contrasena` de la tabla `Usuarios`.
+
+### Roles del sistema
+
+Los roles principales son:
+
+| Rol | Codigo usado | Funcion general |
+| --- | --- | --- |
+| Gerente | `GERENTE` / `G` | Administracion general del sistema |
+| Jefe de piso | `JEFEDEPISO` o `JEFEPISO` / `JP` | Supervision operativa |
+| Hostess | `HOSTESS` / `H` | Recepcion, lista de espera, reservaciones y mesas |
+| Mesero | `MESERO` / `M` | Consulta de mesas asignadas y promociones vigentes |
+
+Al iniciar sesion, el frontend guarda datos en `localStorage`:
+
+```text
+ROL
+USER
+NO_EMPLEADO
+```
+
+Con el valor de `ROL`, la aplicacion redirige al dashboard correspondiente.
+
+### Funcionamiento por rol
+
+#### Gerente
+
+El gerente tiene acceso a funciones administrativas como:
+
+```text
+/gerente
+/usuarios
+/reservaciones
+/gestion_promociones
+/personal
+```
+
+Puede administrar usuarios y promociones, revisar reservaciones y consultar indicadores generales.
+
+#### Jefe de piso
+
+El jefe de piso tiene acceso a supervision operativa:
+
+```text
+/jefepiso
+/estado_mesas
+/personal
+/reservaciones
+/usuarios
+```
+
+En usuarios, el jefe de piso tiene restricciones. Puede trabajar principalmente con personal operativo, pero no debe modificar cuentas de gerente.
+
+#### Hostess
+
+La hostess trabaja con recepcion:
+
+```text
+/hostess
+/reservaciones
+/lista_espera
+/estado_mesas
+/promociones_vigentes
+```
+
+Su flujo principal es revisar reservaciones, manejar la lista de espera, asignar clientes a mesas y consultar promociones vigentes.
+
+#### Mesero
+
+El mesero tiene acceso a:
+
+```text
+/mesero
+/estado_mesas
+/promociones_vigentes
+/rendimiento_mesero
+```
+
+Puede revisar sus mesas asignadas, ver promociones vigentes y consultar su rendimiento.
+
 ## Modulos principales
 
 | Modulo | Funcion |
@@ -481,6 +372,115 @@ Usar este camino solo si no se quiere usar Docker.
 | Promociones | Promociones activas y administracion. |
 | Meseros | Rendimiento, turnos, ranking y promociones aplicadas. |
 | Dashboards | Resumenes para gerente, hostess, jefe de piso y mesero. |
+
+Cada modulo (auth, usuarios, reservaciones, lista_espera, mesas, promociones, meseros y los 4 dashboards) esta dividido en tres archivos, uno por capa:
+
+| Capa | Archivo tipico | Responsabilidad |
+| --- | --- | --- |
+| Controller | `backend/controllers/<modulo>_controller.py` | Define las rutas del Blueprint, lee `request`, llama al service y devuelve `jsonify()` |
+| Service | `backend/services/<modulo>_service.py` | Valida datos, aplica reglas de negocio (permisos por rol, formatos) y orquesta el repository |
+| Repository | `backend/repositories/<modulo>_repository.py` | Ejecuta las queries SQL contra MySQL y regresa filas/valores simples |
+
+`backend/test_app.py` crea la app Flask, registra los controllers como blueprints y registra el errorhandler de `ServiceError`. `backend/db.py` centraliza la conexion a MySQL.
+
+### Promociones
+
+Las promociones se guardan en la tabla `Promocion`.
+
+Cada promocion puede tener:
+
+```text
+nombre
+descripcion
+condiciones
+vigencia_inicio
+vigencia_fin
+estado
+ocasion
+dias_vigentes
+```
+
+El sistema distingue entre:
+
+| Vista/API | Funcion |
+| --- | --- |
+| `/gestion_promociones` | Administrar promociones |
+| `/promociones_vigentes` | Consultar promociones activas |
+| `/api/promociones` | Crear, consultar y editar promociones |
+| `/api/promociones-vigentes` | Consultar promociones activas dentro de su vigencia |
+
+Si una promocion ya fue aplicada por un mesero, el sistema puede desactivarla en lugar de eliminarla para no romper registros historicos.
+
+### Gestion de meseros
+
+La gestion de meseros usa principalmente:
+
+```text
+Gestion_de_meseros
+Promocion_has_Gestion_de_meseros
+Mesa
+Usuarios
+```
+
+El sistema calcula o consulta:
+
+```text
+mesas atendidas
+mesas asignadas
+promedio de tiempo
+promociones aplicadas
+calificacion
+ranking
+turno
+observaciones
+```
+
+Cuando una mesa ocupada pasa a `libre`, el backend registra una entrada en `Gestion_de_meseros` para contar esa mesa como atendida y calcular el tiempo de servicio.
+
+### Estado de mesas
+
+El modulo de mesas maneja estados como:
+
+```text
+libre
+ocupada
+limpieza
+```
+
+Tambien guarda:
+
+```text
+cliente asignado
+numero de personas
+mesero asignado
+hora de inicio
+razon de retraso
+comentario de retraso
+```
+
+El endpoint principal es:
+
+```text
+/api/mesas
+```
+
+### Reservaciones y lista de espera
+
+Reservaciones:
+
+```text
+/reservaciones
+/api/reservaciones
+```
+
+Lista de espera:
+
+```text
+/lista_espera
+/api/lista-espera
+```
+
+Estos modulos permiten registrar, editar, eliminar y consultar clientes antes de asignarlos a una mesa.
 
 ## Cosas importantes para alguien nuevo
 
