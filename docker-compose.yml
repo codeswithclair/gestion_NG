@@ -1,0 +1,49 @@
+# Stack de desarrollo: Flask + MySQL.
+#
+# Uso:
+#   1. Copiar .env.example a .env y ajustar valores locales si hace falta.
+#   2. docker compose up --build
+#   3. Abrir http://127.0.0.1:5000
+#
+# database/schema.sql se monta como script de inicializacion de MySQL. Se ejecuta
+# solo cuando el volumen mysql_data se crea por primera vez. Usar
+# "docker compose down -v" para borrar el volumen local y reinicializar.
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: gestion_ng_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    container_name: gestion_ng_web
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
