@@ -7,6 +7,8 @@ __pycache__/
 
 # Configuración local (credenciales de MySQL, etc).
 .env
+.env.*
+!.env.example
 
 # Control de versiones y editores.
 .git/

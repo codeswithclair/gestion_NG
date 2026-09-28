@@ -23,6 +23,10 @@
             </div>
 
             <div class="topbar__right">
+                <button id="btnToggleReportes" class="reportes-toggle" type="button" style="display:none;"
+                    aria-controls="reportesPanel" aria-expanded="false">
+                    Reportes PDF <span aria-hidden="true">&rsaquo;</span>
+                </button>
                 <button id="btnBackMenu" class="btn-primary btn-dark">
                     ← Regresar al menú 
                 </button>
@@ -244,12 +248,17 @@
             </section>
 
             <!-- PANEL DE REPORTES: promedio de atención y motivo de retraso más frecuente -->
-            <section class="panel" id="reportesPanel" style="display:none;">
-                <header class="panel-header">
-                    <h2 class="panel-title">Reportes de mesas y retrasos</h2>
-                    <p class="panel-subtitle">
-                        Consulta el resumen operativo antes de descargar el reporte en PDF.
-                    </p>
+            <section class="panel reportes-drawer" id="reportesPanel" style="display:none;" aria-hidden="true">
+                <header class="panel-header reportes-drawer__header">
+                    <div>
+                        <h2 class="panel-title">Reportes de mesas y retrasos</h2>
+                        <p class="panel-subtitle">
+                            Consulta el resumen operativo antes de descargar el reporte en PDF.
+                        </p>
+                    </div>
+                    <button id="btnCerrarReportes" class="reportes-close" type="button" aria-label="Cerrar reportes">
+                        &times;
+                    </button>
                 </header>
 
                 <div class="panel-body panel-body--list">
@@ -281,6 +290,8 @@
 
         </div>
     </div>
+
+    <div id="reportesBackdrop" class="reportes-backdrop" hidden></div>
 
     <!-- razon de retraso alerta -->
     <div id="modalRetraso" class="modal" style="display:none;">

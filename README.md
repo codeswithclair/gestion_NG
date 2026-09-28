@@ -1,23 +1,92 @@
 # Noreste Grill
 
-Aplicación Flask para los flujos de trabajo del personal de un restaurante, incluyendo inicio de sesión, reservaciones, lista de espera, mesas, promociones, usuarios y dashboards.
+Aplicacion Flask para la operacion interna de un restaurante: inicio de sesion por rol, dashboards, usuarios, reservaciones, lista de espera, estado de mesas, promociones, rendimiento de meseros y reportes de mesas/retrasos agregados en Sprint 1.
 
-## Usuarios objetivo
+## Stack Tecnologico
 
-La aplicación está pensada para el personal interno del restaurante, no para clientes finales. Los roles que la usan son:
+| Area | Tecnologia |
+| --- | --- |
+| Backend | Python + Flask |
+| Frontend | HTML, CSS, JavaScript |
+| Base de datos | MySQL 8 |
+| Contenedores de desarrollo | Docker + Docker Compose |
+| Documentacion API | Swagger UI en `/docs` |
+| Conexion a base de datos | mysql-connector-python |
+| Reportes PDF | ReportLab |
 
-| Rol | Quién es | Para qué usa la aplicación |
+## Funcionalidad de Sprint 1
+
+- Stack Docker de desarrollo con servicios separados para Flask y MySQL.
+- Inicializacion automatica de MySQL desde `database/schema.sql` la primera vez que se crea el volumen.
+- Endpoints de reportes de mesas/retrasos para resumenes operativos.
+- Generacion de reportes PDF de mesas/retrasos con ReportLab.
+- Swagger UI disponible en `http://127.0.0.1:5000/docs`.
+
+## Setup Recomendado: Docker
+
+Requisito: instalar Docker Desktop con Docker Compose.
+
+1. Copiar el archivo de variables de entorno:
+
+   ```powershell
+   Copy-Item .env.example .env
+   ```
+
+2. Revisar `.env`. Los valores del ejemplo son placeholders seguros para desarrollo local.
+
+3. Levantar Flask y MySQL:
+
+   ```powershell
+   docker compose up --build
+   ```
+
+4. Abrir la aplicacion:
+
+   ```text
+   http://127.0.0.1:5000
+   ```
+
+5. Abrir Swagger UI:
+
+   ```text
+   http://127.0.0.1:5000/docs
+   ```
+
+Con Docker, los integrantes del equipo no necesitan instalar MySQL por separado. El contenedor de MySQL crea la base configurada y ejecuta `database/schema.sql` automaticamente la primera vez que se crea el volumen `mysql_data`.
+
+## Detener Docker
+
+Detener los contenedores conservando el volumen local de base de datos:
+
+```powershell
+docker compose down
+```
+
+Detener los contenedores y borrar el volumen local de base de datos:
+
+```powershell
+docker compose down -v
+```
+
+Advertencia: `docker compose down -v` elimina el volumen local de MySQL. El siguiente `docker compose up --build` recreara la base desde `database/schema.sql`, perdiendo los cambios locales.
+
+## Variables de Entorno
+
+`docker-compose.yml` lee valores locales desde `.env`.
+
+| Variable | Usada por | Proposito |
 | --- | --- | --- |
-| Gerente | Encargado general del restaurante | Administra usuarios, promociones, revisa reservaciones y consulta indicadores generales del negocio |
-| Jefe de piso | Supervisor operativo del salón | Supervisa el estado de las mesas, el personal operativo y las reservaciones del turno |
-| Hostess | Personal de recepción | Recibe clientes, gestiona la lista de espera, las reservaciones y la asignación de mesas |
-| Mesero | Personal de servicio en mesas | Consulta sus mesas asignadas, las promociones vigentes y su propio rendimiento |
+| `DB_HOST` | Flask | Host de MySQL. En Docker debe ser `db`. |
+| `DB_NAME` | Flask + MySQL | Nombre de la base de datos de la aplicacion. |
+| `DB_USER` | Flask + MySQL | Usuario de base de datos de la aplicacion. |
+| `DB_PASSWORD` | Flask + MySQL | Password del usuario de la aplicacion. |
+| `MYSQL_ROOT_PASSWORD` | MySQL | Password root/admin del contenedor MySQL. |
 
-Cada rol inicia sesión con su propio usuario y es redirigido automáticamente a su dashboard correspondiente. Más detalle sobre permisos y rutas por rol en [ONBOARDING.md](ONBOARDING.md).
+No commitear un `.env` real; Git y Docker lo ignoran.
 
-## Instalación local
+## Setup Manual Opcional
 
-Crear y activar un entorno virtual, luego instalar las dependencias:
+El setup manual solo es util si no se usa Docker.
 
 ```powershell
 python -m venv venv
@@ -25,64 +94,21 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-## Configurar el archivo .env
+Para setup manual, instalar e iniciar MySQL localmente, crear una base de datos, ejecutar `database/schema.sql` dentro de esa base y configurar `DB_HOST=localhost` en el `.env` local.
 
-La aplicación usa [python-dotenv](https://pypi.org/project/python-dotenv/) para leer la configuración de la base de datos desde un archivo `.env`. Este archivo **no se sube al repositorio** (está en `.gitignore`) porque contiene credenciales locales.
-
-### Pasos para configurarlo
-
-1. En la raíz del proyecto existe un archivo de ejemplo llamado `.env.example`. Cópialo y renómbralo a `.env`:
-
-   ```powershell
-   Copy-Item .env.example .env
-   ```
-
-2. Abre el archivo `.env` recién creado y reemplaza los valores con los datos de tu instalación local de MySQL:
-
-   ```env
-   DB_HOST=localhost
-   DB_USER=root
-   DB_PASSWORD=tu_contrasena_de_mysql
-   DB_NAME=noreste_grill
-   ```
-
-3. Guarda el archivo. `backend/db.py` carga estas variables automáticamente al iniciar la aplicación (con `load_dotenv()`), así que no es necesario declararlas manualmente en la terminal cada vez.
-
-### Variables disponibles
-
-| Variable | Descripción | Valor por defecto si falta |
-| --- | --- | --- |
-| `DB_HOST` | Servidor donde corre MySQL | `localhost` |
-| `DB_USER` | Usuario de MySQL | `root` |
-| `DB_PASSWORD` | Contraseña del usuario de MySQL | (vacío) |
-| `DB_NAME` | Nombre de la base de datos | `noreste_grill` |
-
-### Notas importantes
-
-- El archivo `.env` es **personal de cada máquina**: nunca debe compartirse ni subirse a control de versiones.
-- Si el archivo `.env` no existe o le falta alguna variable, la aplicación usará los valores por defecto de la tabla anterior (definidos en `backend/db.py`), lo cual puede causar errores de conexión si tu instalación de MySQL no coincide con esos valores.
-- Antes de correr la app por primera vez, la base de datos `noreste_grill` debe existir en MySQL (ver [ONBOARDING.md](ONBOARDING.md) para crearla con `database/schema.sql`).
-- Alternativa sin `.env`: también puedes definir las variables directamente en la sesión de PowerShell, aunque esto solo dura mientras la terminal esté abierta:
-
-  ```powershell
-  $env:DB_HOST="localhost"
-  $env:DB_USER="root"
-  $env:DB_PASSWORD="tu_contrasena_de_mysql"
-  $env:DB_NAME="noreste_grill"
-  ```
-
-## Ejecutar la aplicación
+Ejecutar Flask manualmente:
 
 ```powershell
 python -m backend.test_app
 ```
 
-La aplicación inicia en `http://127.0.0.1:5000`.
+## Roles
 
-## Versiones
+| Rol | Proposito |
+| --- | --- |
+| Gerente | Administra usuarios y promociones, revisa reservaciones y consulta indicadores generales. |
+| Jefe de piso | Supervisa estado de mesas, operacion del piso, personal y reservaciones. |
+| Hostess | Gestiona reservaciones, lista de espera, asignacion de mesas y promociones activas. |
+| Mesero | Consulta mesas asignadas, promociones activas y rendimiento personal. |
 
-Ver [VERSIONES.md](VERSIONES.md) para las herramientas, versiones, pasos de instalación y la razón por la que se usaron esas versiones.
-
-## Onboarding
-
-Ver [ONBOARDING.md](ONBOARDING.md) para la guía de instalación local, estructura del proyecto, roles, notas de base de datos y módulos principales.
+Ver [ONBOARDING.md](ONBOARDING.md) para estructura del proyecto, notas de setup, rutas y detalles operativos.
