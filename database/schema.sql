@@ -1,6 +1,3 @@
-CREATE DATABASE IF NOT EXISTS noreste_grill;
-USE noreste_grill;
-
 CREATE TABLE Rol (
     id_rol VARCHAR(10) NOT NULL,
     nombre VARCHAR(50) NOT NULL,
@@ -49,6 +46,7 @@ CREATE TABLE Reservacion (
     no_personas INT NOT NULL,
     estado VARCHAR(20) NOT NULL,
     comentarios VARCHAR(255) NULL,
+    fecha_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_reservacion PRIMARY KEY (id_reservacion),
     CONSTRAINT fk_reservacion_usuarios
         FOREIGN KEY (no_empleado) REFERENCES Usuarios(no_empleado)
@@ -92,6 +90,8 @@ CREATE TABLE Gestion_de_meseros (
     turno VARCHAR(30) NULL,
     observacion VARCHAR(255) NULL,
     calificacion DOUBLE DEFAULT 0,
+    razon_retraso VARCHAR(100) NULL,
+    comentario_retraso VARCHAR(255) NULL,
     fecha_registro DATE NOT NULL DEFAULT (CURRENT_DATE),
     CONSTRAINT pk_meseros PRIMARY KEY (id_gestion),
     CONSTRAINT fk_gestion_usuarios
@@ -122,17 +122,17 @@ CREATE TABLE Promocion_has_Gestion_de_meseros (
 
 -- 1. Insertar Roles
 INSERT INTO Rol (id_rol, nombre) VALUES
-('GER', 'GERENTE'),
-('MES', 'MESERO'),
-('REC', 'HOSTESS'),
-('JDP', 'JEFEDEPISO');
+('G', 'GERENTE'),
+('M', 'MESERO'),
+('H', 'HOSTESS'),
+('JP', 'JEFEDEPISO');
 
 -- 2. Insertar Usuarios
 INSERT INTO Usuarios (no_empleado, id_rol, nombre, apellido, contrasena, correo, nombre_usuario, estado, ultimo_acceso) VALUES
-(102, 'GER', 'Roberto', 'González', 'gerente123', 'roberto.g@norestegrill.com', 'gerente', 'ACTIVO', NOW()),
-(103, 'MES', 'Carlos', 'Mendoza', 'mesero123', 'carlos.m@norestegrill.com', 'mesero', 'ACTIVO', NOW()),
-(104, 'JDP', 'Sofia', 'Ramírez', 'jefepiso123', 'sofia.r@norestegrill.com', 'jefepiso', 'ACTIVO', NOW()),
-(105, 'REC', 'Valeria', 'Torres', 'hostess123', 'valeria.t@norestegrill.com', 'hostess', 'ACTIVO', NOW());
+(102, 'G', 'Roberto', 'González', 'gerente123', 'roberto.g@norestegrill.com', 'gerente', 'ACTIVO', NOW()),
+(103, 'M', 'Carlos', 'Mendoza', 'mesero123', 'carlos.m@norestegrill.com', 'mesero', 'ACTIVO', NOW()),
+(104, 'JP', 'Sofia', 'Ramírez', 'jefepiso123', 'sofia.r@norestegrill.com', 'jefepiso', 'ACTIVO', NOW()),
+(105, 'H', 'Valeria', 'Torres', 'hostess123', 'valeria.t@norestegrill.com', 'hostess', 'ACTIVO', NOW());
 
 -- 3. Insertar Mesas
 INSERT INTO Mesa (id_mesa, no_empleado, estado, nombre_cliente, no_personas, hora_inicio, razon_retraso, comentario_retraso) VALUES

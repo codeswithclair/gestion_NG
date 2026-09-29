@@ -390,6 +390,99 @@ if (rol !== "HOSTESS") {
     });
 }
 
+// --- Reportes de mesas y retrasos (Jefe de piso y Gerente) ---
+const reportesPanel = document.getElementById("reportesPanel");
+const btnToggleReportes = document.getElementById("btnToggleReportes");
+const btnCerrarReportes = document.getElementById("btnCerrarReportes");
+const reportesBackdrop = document.getElementById("reportesBackdrop");
+const reporteFechaInicio = document.getElementById("reporteFechaInicio");
+const reporteFechaFin = document.getElementById("reporteFechaFin");
+const btnVerResumen = document.getElementById("btnVerResumen");
+const reporteResumen = document.getElementById("reporteResumen");
+const reportePromedio = document.getElementById("reportePromedio");
+const reporteMesasAtendidas = document.getElementById("reporteMesasAtendidas");
+const reporteMotivo = document.getElementById("reporteMotivo");
+const btnDescargarPdf = document.getElementById("btnDescargarPdf");
+
+if (rol === "JEFEDEPISO" || rol === "GERENTE") {
+    btnToggleReportes.style.display = "inline-flex";
+}
+
+function abrirReportes() {
+    reportesPanel.style.display = "block";
+    reportesPanel.setAttribute("aria-hidden", "false");
+    btnToggleReportes.setAttribute("aria-expanded", "true");
+    reportesBackdrop.hidden = false;
+    requestAnimationFrame(() => {
+        reportesPanel.classList.add("reportes-drawer--open");
+        reportesBackdrop.classList.add("reportes-backdrop--visible");
+    });
+}
+
+function cerrarReportes() {
+    reportesPanel.classList.remove("reportes-drawer--open");
+    reportesBackdrop.classList.remove("reportes-backdrop--visible");
+    reportesPanel.setAttribute("aria-hidden", "true");
+    btnToggleReportes.setAttribute("aria-expanded", "false");
+
+    window.setTimeout(() => {
+        if (reportesPanel.getAttribute("aria-hidden") === "true") {
+            reportesPanel.style.display = "none";
+            reportesBackdrop.hidden = true;
+        }
+    }, 180);
+}
+
+btnToggleReportes?.addEventListener("click", () => {
+    const estaAbierto = reportesPanel.classList.contains("reportes-drawer--open");
+    if (estaAbierto) cerrarReportes();
+    else abrirReportes();
+});
+
+btnCerrarReportes?.addEventListener("click", cerrarReportes);
+reportesBackdrop?.addEventListener("click", cerrarReportes);
+
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && reportesPanel.classList.contains("reportes-drawer--open")) {
+        cerrarReportes();
+    }
+});
+
+function construirQueryReporte() {
+    const params = new URLSearchParams();
+    if (reporteFechaInicio.value) params.set("fecha_inicio", reporteFechaInicio.value);
+    if (reporteFechaFin.value) params.set("fecha_fin", reporteFechaFin.value);
+    return params;
+}
+
+btnVerResumen?.addEventListener("click", async () => {
+    try {
+        const params = construirQueryReporte();
+        const res = await fetch(`/api/mesas/reportes/resumen?${params.toString()}`);
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message || "No se pudo obtener el resumen del reporte.");
+            return;
+        }
+
+        reportePromedio.textContent = data.promedio_minutos ?? "--";
+        reporteMesasAtendidas.textContent = data.mesas_atendidas ?? "--";
+        reporteMotivo.textContent = data.motivo_mas_frecuente || "Sin registros";
+
+        reporteResumen.style.display = "block";
+        btnDescargarPdf.style.display = "inline-block";
+    } catch (error) {
+        console.error("Error al obtener el resumen del reporte:", error);
+        alert("No se pudo obtener el resumen del reporte.");
+    }
+});
+
+btnDescargarPdf?.addEventListener("click", () => {
+    const params = construirQueryReporte();
+    window.open(`/api/mesas/reportes/pdf?${params.toString()}`, "_blank");
+});
+
 setInterval(() => {
     Object.values(mesas).forEach(m => {
         if (m.estado === "ocupada" || m.estado === "limpieza") {

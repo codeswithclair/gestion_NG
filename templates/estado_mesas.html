@@ -23,6 +23,10 @@
             </div>
 
             <div class="topbar__right">
+                <button id="btnToggleReportes" class="reportes-toggle" type="button" style="display:none;"
+                    aria-controls="reportesPanel" aria-expanded="false">
+                    Reportes PDF <span aria-hidden="true">&rsaquo;</span>
+                </button>
                 <button id="btnBackMenu" class="btn-primary btn-dark">
                     ← Regresar al menú 
                 </button>
@@ -243,8 +247,51 @@
                 </div>
             </section>
 
+            <!-- PANEL DE REPORTES: promedio de atención y motivo de retraso más frecuente -->
+            <section class="panel reportes-drawer" id="reportesPanel" style="display:none;" aria-hidden="true">
+                <header class="panel-header reportes-drawer__header">
+                    <div>
+                        <h2 class="panel-title">Reportes de mesas y retrasos</h2>
+                        <p class="panel-subtitle">
+                            Consulta el resumen operativo antes de descargar el reporte en PDF.
+                        </p>
+                    </div>
+                    <button id="btnCerrarReportes" class="reportes-close" type="button" aria-label="Cerrar reportes">
+                        &times;
+                    </button>
+                </header>
+
+                <div class="panel-body panel-body--list">
+                    <div class="list-item">
+                        <label class="form-label"><strong>Desde</strong></label>
+                        <input id="reporteFechaInicio" class="form-input" type="date">
+                    </div>
+
+                    <div class="list-item">
+                        <label class="form-label"><strong>Hasta</strong></label>
+                        <input id="reporteFechaFin" class="form-input" type="date">
+                    </div>
+
+                    <button class="btn-primary btn-dark" id="btnVerResumen">
+                        Ver resumen
+                    </button>
+
+                    <div class="list-item" id="reporteResumen" style="display:none;">
+                        <p><strong>Promedio de atención:</strong> <span id="reportePromedio">--</span> min</p>
+                        <p><strong>Mesas atendidas:</strong> <span id="reporteMesasAtendidas">--</span></p>
+                        <p><strong>Motivo de retraso más común:</strong> <span id="reporteMotivo">--</span></p>
+                    </div>
+
+                    <button class="btn-primary" id="btnDescargarPdf" style="display:none;">
+                        Descargar reporte PDF
+                    </button>
+                </div>
+            </section>
+
         </div>
     </div>
+
+    <div id="reportesBackdrop" class="reportes-backdrop" hidden></div>
 
     <!-- razon de retraso alerta -->
     <div id="modalRetraso" class="modal" style="display:none;">

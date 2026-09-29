@@ -60,4 +60,7 @@ def home():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # host=0.0.0.0 para que sea alcanzable desde fuera del contenedor Docker.
+    # La separación completa de configuración dev/prod (DEBUG, HOST, PORT via
+    # .env) se atiende en un ticket aparte (GN-15).
+    app.run(host="0.0.0.0", port=5000, debug=True)

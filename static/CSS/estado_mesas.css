@@ -276,6 +276,107 @@
     background: #1f3636 !important;
 }
 
+.topbar__right {
+    margin-left: auto;
+}
+
+.reportes-toggle {
+    align-items: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 0 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #1f3636;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--shadow-soft);
+    transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+}
+
+.reportes-toggle:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+    transform: translateY(-1px);
+}
+
+.reportes-toggle span {
+    display: inline-block;
+    font-size: 1.25rem;
+    line-height: 1;
+    transition: transform 0.18s ease;
+}
+
+.reportes-toggle[aria-expanded="true"] span {
+    transform: rotate(180deg);
+}
+
+.reportes-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: rgba(15, 23, 42, 0.28);
+    opacity: 0;
+    transition: opacity 0.18s ease;
+}
+
+.reportes-backdrop--visible {
+    opacity: 1;
+}
+
+.reportes-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 50;
+    width: min(420px, calc(100vw - 24px));
+    height: 100vh;
+    margin: 0;
+    border-radius: 0;
+    border: 0;
+    overflow-y: auto;
+    transform: translateX(105%);
+    transition: transform 0.18s ease;
+    box-shadow: -18px 0 40px rgba(15, 23, 42, 0.24);
+}
+
+.reportes-drawer--open {
+    transform: translateX(0);
+}
+
+.reportes-drawer__header {
+    align-items: flex-start;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #ffffff;
+}
+
+.reportes-close {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #334155;
+    font-size: 1.35rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.reportes-close:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+}
+
+.reporte-summary {
+    border-left: 4px solid #2f4f4f;
+    background: #f8fafc;
+}
+
 
 @media (max-width: 900px) {
     .content-grid {
@@ -290,6 +391,15 @@
     .floor-bottom {
         flex-wrap: wrap;
         justify-content: center;
+    }
+
+    .reportes-toggle {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .reportes-drawer {
+        width: 100vw;
     }
 }
 
