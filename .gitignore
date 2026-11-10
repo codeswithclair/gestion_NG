@@ -18,3 +18,8 @@ htmlcov/
 *.log
 Thumbs.db
 desktop.ini
+
+# Generados por scripts/
+.app.pid
+logs/
+backups/
